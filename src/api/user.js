@@ -1,8 +1,10 @@
 import request from '@/utils/request'
+import { ROAST_CONFIG } from '../config.js'
 
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    // url: '/vue-element-admin/user/login',
+    url: ROAST_CONFIG.API_URL + '/user/Login',
     method: 'post',
     data
   })

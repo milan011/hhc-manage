@@ -5,6 +5,8 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  userId: null,
+  shopId: null,
   avatar: '',
   introduction: '',
   roles: []
@@ -20,6 +22,12 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_USERID: (state, shopId) => {
+    state.shopId = shopId
+  },
+  SET_SHOPID: (state, userId) => {
+    state.userId = userId
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
@@ -31,10 +39,17 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    // const { username, password } = userInfo
+    const { UserPhone, NewPassword } = userInfo
+    /*console.log(userInfo)
+    console.log(username)
+    console.log(password)
+    const username = userInfo.UserPhone
+    const password = userInfo.NewPassword*/
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
+      login({ UserPhone: UserPhone.trim(), NewPassword: NewPassword }).then(response => {
+        console.log('logres',response)
+        const data = response.Data
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
@@ -54,7 +69,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { roles, name, id, shopId, avatar, introduction } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -63,6 +78,8 @@ const actions = {
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
+        commit('SET_USERID', id)
+        commit('SET_SHOPID', shopId)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         resolve(data)

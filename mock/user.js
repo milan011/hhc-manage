@@ -53,7 +53,16 @@ export default [
     type: 'get',
     response: config => {
       const { token } = config.query
-      const info = users[token]
+      // const info = users[token]
+
+      const info = {
+        roles: ['admin'],
+        id: '1',
+        shopId: '1',
+        introduction: 'I am a super administrator',
+        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+        name: 'Super Admin'
+      }
 
       // mock error
       if (!info) {
@@ -62,9 +71,9 @@ export default [
           message: 'Login failed, unable to get user details.'
         }
       }
-
       return {
-        code: 20000,
+        // code: 20000,
+        ResultType: 0,
         data: info
       }
     }

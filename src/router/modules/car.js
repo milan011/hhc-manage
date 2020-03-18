@@ -14,7 +14,7 @@ const carRouter = {
   children: [
     {
       path: 'allCar',
-      component: () => import('@/views/components-demo/tinymce'),
+      component: () => import('@/views/car/list'),
       name: 'AllCar',
       meta: { title: 'allCar' }
     },

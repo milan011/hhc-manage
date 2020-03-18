@@ -1,7 +1,8 @@
 /**
  * Defines the API route we are using.
  */
-var api_url = 'http://www.mycnc.net/api';
+var api_url = 'http://testapi.simaxian.com/api';
+// var api_url = 'http://www.mycnc.net/api';
 var app_url = 'http://www.mycnc.net';
 /*var api_url = 'http://www.erpwm.com/api';
 var app_url = 'http://www.erpwm.com';*/
