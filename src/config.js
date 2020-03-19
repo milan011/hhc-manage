@@ -24,22 +24,34 @@ const ROAST_CONFIG = {
     // GAODE_MAPS_JS_API_KEY: gaode_maps_js_api_key
 };
 
-//存货类型
-const stockType = {
-  F: '产成品', 
-  M: '原材料',
-  D: '虚拟物料(无库存)',
-  L: '人工',
+//变速箱
+const transmissionConfig = ['不限', '手动', '自动'];
+
+//外观颜色
+const outColorConfig = {
+  0: '其他',
+  1: '黑', 
+  2: '白',
+  3: '银白',
+  4: '红',
+  5: '蓝',
+  6: '银',
+  7: '橙',
+  8: '深灰',
+  9: '香槟金',
+  10: '灰',
+  11: '棕',
+  12: '绿',
+  13: '紫',
 };
 
-//折旧类型
-const depnType = {
-  1: '直线', 
-  2: '减值折旧法',
-};
-
-//星期
-const weekDay = [
+//车源状态
+const carStatus = {
+  0: '废弃',
+  1: '正常', 
+  4: '已交易',
+}
+/*const carStatus = [
   {'key': '1', 'day': '星期一'},
   {'key': '2', 'day': '星期二'},
   {'key': '3', 'day': '星期三'},
@@ -47,13 +59,13 @@ const weekDay = [
   {'key': '5', 'day': '星期五'},
   {'key': '6', 'day': '星期六'},
   {'key': '0', 'day': '星期天'},
-]
+]*/
 
 export { 
     ROAST_CONFIG, 
-    stockType,
-    weekDay,
-    depnType,
+    transmissionConfig,
+    outColorConfig,
+    carStatus,
 }
 
 /*export const zrConfig = {

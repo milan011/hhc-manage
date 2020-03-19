@@ -2,14 +2,28 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input 
-        :placeholder="$t('example.condetionName')"
-        clearable 
-        v-model="listQuery.name"
-        style="width: 150px;" 
+        placeholder="价格:"
+        :disabled="true"
+        style="width: 70px;" 
         class="filter-item">
       </el-input>
-      <el-select clearable style="width:100px;" v-model="listQuery.condetion" class="filter-item" filterable placeholder="条件">
-        <!-- <el-option v-for="user in userList" :key="user.id" :label="user.nick_name" :value="user.id"/> -->
+      <el-input 
+        placeholder="从"
+        clearable 
+        v-model.number="listQuery.SaleAMTMin"
+        style="width: 75px;" 
+        class="filter-item">
+      </el-input>
+      <el-input 
+        placeholder="到"
+        clearable 
+        v-model.number="listQuery.SaleAMTMin"
+        style="width: 75px;" 
+        class="filter-item">
+      </el-input>
+      <!-- <el-input-number v-model="listQuery.SaleAMTMin" @change="" :min="1" :max="10" label="价格"></el-input-number> -->
+      <el-select clearable style="width:100px;" v-model="listQuery.Transmission" class="filter-item" filterable placeholder="变速箱">
+        <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <!-- <el-tooltip class="item" effect="dark" content="注意:默认只导出当月信息,如需导出其他月,请选择筛选条件" placement="top">
@@ -20,17 +34,44 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :key="tableKey" :data="list" border fit highlight-current-row style="width: 100%;">
-      <el-table-column :label="$t('example.id')" show-overflow-tooltip width="80%" align="center">
+      <!-- <el-table-column :label="$t('table.id')" :resizable="false" show-overflow-tooltip width="60%" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.ID }}</span>
+        </template>
+      </el-table-column> -->
+      <el-table-column :label="$t('car.name')" width="200%" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.FullName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('example.chart')" show-overflow-tooltip align="center">
+      <el-table-column :label="$t('car.SaleAMT')" :resizable="false" show-overflow-tooltip align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.belongs_to_chart.chartdescription }}</span>
+          <span>{{ scope.row.SaleAMT }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('example.cancreate')" show-overflow-tooltip align="center">
+      <el-table-column :label="$t('car.Mileage')" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Mileage }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('car.Transmission')" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+      <span>{{ transmissionOptions[scope.row.Transmission]}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('car.Out_color')" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+          <span>{{ outColorOptions[scope.row.Out_color] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('car.Car_Status')" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.Car_Status | statusFilter">
+            <span>{{ carStatus[scope.row.Car_Status] }}</span>
+          </el-tag>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column :label="$t('car.cancreate')" show-overflow-tooltip align="center">
         <template slot-scope="scope">
           <span>
             <el-tag :type="scope.row.cancreate | statusFilter">
@@ -38,22 +79,30 @@
             </el-tag>
           </span>
         </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.date')" width="150px" align="center">
+      </el-table-column> -->
+      <el-table-column :label="$t('car.CreateDate')" :resizable="false" width="150px" align="center">
         <template slot-scope="scope">
           <span>
-            {{ scope.row.lastcompleted | parseTime('{y}-{m}-{d}') }}
-            <!-- |
-            <span v-if="scope.row.belongs_to_creater">{{scope.row.belongs_to_creater.nick_name}}</span>
-            <span v-else></span> -->
+            {{ scope.row.CreateDate | parseTime('{y}-{m}-{d}') }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" width="230%" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('car.CreateName')" show-overflow-tooltip :resizable="false" width="150px" align="center">
         <template slot-scope="scope">
-          <!-- <el-button type="success" size="mini" @click="handleShow(scope.row)">
-            {{ $t('table.content') }}
-          </el-button> -->
+          <span>
+            <span v-if="scope.row.CreateName">{{scope.row.CreateName}}</span>
+            <span v-else></span>
+            |
+            <span v-if="scope.row.shopname">{{scope.row.shopname}}</span>
+            <span v-else></span>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.actions')" :resizable="false" align="center" width="230%" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="success" size="mini" @click="handleShow(scope.row)">
+            {{ $t('table.show') }}
+          </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">
             {{ $t('table.edit') }}
           </el-button>
@@ -69,12 +118,12 @@
     <div class="pagination-container">
       <el-pagination v-show="total>0" :current-page="listQuery.page" :total="total" background layout="total, prev, pager, next" @current-change="handleCurrentChange" />
     </div>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <!-- <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px;margin:0px auto;">
-        <el-form-item :label="$t('example.name')" prop="name">
+        <el-form-item :label="$t('car.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item :label="$t('example.chart')" prop="chart">
+        <el-form-item :label="$t('car.chart')" prop="chart">
           <el-select 
             v-model="temp.chart" 
             class="filter-item" 
@@ -84,13 +133,13 @@
             <el-option v-for="chart in chartMasterList" :key="chart.id" :label="chart.chartdescription" :value="chart.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('example.paymenttype')">
+        <el-form-item :label="$t('car.paymenttype')">
           <el-radio-group @change="" v-model="temp.paymenttype">
             <el-radio-button label="1">次月截止</el-radio-button>
             <el-radio-button label="2">N天后截止</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('example.cancreate')">
+        <el-form-item :label="$t('temp.cancreate')">
           <el-switch
             v-model="temp.cancreate"
             active-color="#13ce66"
@@ -99,7 +148,7 @@
             inactive-value="0">
           </el-switch>
         </el-form-item>
-        <el-form-item :label="$t('example.discountrate')" prop="discountrate">
+        <el-form-item :label="$t('temp.discountrate')" prop="discountrate">
           <el-input-number 
             v-model='temp.discountrate'   
             :min="0" 
@@ -115,9 +164,9 @@
         <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{ $t('table.confirm') }}</el-button>
         <el-button v-else type="primary" @click="updateData">{{ $t('table.confirm') }}</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 组件 -->
-    <!-- <example-components ref="exampleChild"></example-components>  -->
+    <!-- <car-components ref="carChild"></car-components>  -->
   </div>
 </template>
 <script>
@@ -125,6 +174,7 @@
   import waves from '@/directive/waves' // 水波纹指令
   import { parseTime } from '@/utils'
   import { isEmpty } from '@/common.js'
+  import { transmissionConfig, outColorConfig, carStatus }  from '@/config.js'
   // import CarComponents from './components/CarComponents'
 
 const calendarTypeOptions = [
@@ -139,7 +189,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
-  name: 'example',
+  name: 'car',
   // components: { CarComponents },
   directives: {
     waves
@@ -149,6 +199,7 @@ export default {
       const statusMap = {
         1: 'success',
         0: 'danger',
+        4: 'warning',
       }
       return statusMap[status]
     },
@@ -172,7 +223,7 @@ export default {
         Shop_Id: this.$store.getters.shopId,
         CarType: "0",
         Factory: "",
-        Transmission: "0",
+        Transmission: null,
         Out_color: "0",
         Capacity: "0",
         Sale_number: "-1",
@@ -183,11 +234,13 @@ export default {
         SaleAMTMin: "",
         SaleAMTMax: "",
         Car_Status: "1",
-        RoleName: this.$store.getters.roles,
+        RoleName: this.$store.getters.roles[0],
         updatetime: ""
       },
-      cancreateStatus:['否', '是'],
       calendarTypeOptions,
+      transmissionOptions: transmissionConfig,
+      outColorOptions: outColorConfig,
+      carStatus,
       showReviewer: false,
       temp: {
         id: undefined,
@@ -199,7 +252,7 @@ export default {
       },
       dialogFormVisible: false,
       setRateVisible: false,
-      exampleName: '',
+      carName: '',
       dialogStatus: '',
       textMap: {
         update: '编辑',
@@ -231,20 +284,20 @@ export default {
       _this.listLoading = true
       console.log(_this.listQuery)
       getCarList(_this.listQuery).then(response => {
-        _this.list = response.data.data
-        _this.total = response.data.total
+        _this.list = response.Data.DataList
+        _this.total = response.Data.total
         // Just to simulate the time of the request
         setTimeout(() => {
           _this.listLoading = false
         }, 1.5 * 1000)
       })
     },
-    getAllChartMasters(){
+    /*getAllChartMasters(){
       var _this = this
       chartMasterAll().then(response => {
         _this.chartMasterList = response.data
       })
-    },
+    },*/
     handleFilter() {
       var _this = this
       _this.listQuery.page = 1
@@ -399,7 +452,7 @@ export default {
     },
     handleSetChild(row){
       var _this = this
-      _this.$refs.exampleChild.handleStockCategory(row) 
+      _this.$refs.carChild.handleStockCategory(row) 
     },
   }
 }

@@ -20,7 +20,7 @@ const carRouter = {
     },
     {
       path: 'myCar',
-      component: () => import('@/views/components-demo/markdown'),
+      component: () => import('@/views/car/list'),
       name: 'MyCar',
       meta: { title: 'myCar' }
     }

@@ -20,17 +20,22 @@
       </el-button>
     </div>
     <el-table v-loading="listLoading" :key="tableKey" :data="list" border fit highlight-current-row style="width: 100%;">
-      <el-table-column :label="$t('example.id')" show-overflow-tooltip width="80%" align="center">
+      <el-table-column :label="$t('example.id')" :resizable="false" show-overflow-tooltip width="80%" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('example.chart')" show-overflow-tooltip align="center">
+      <el-table-column :label="$t('example.name')" :resizable="false" show-overflow-tooltip align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('example.chart')" :resizable="false" show-overflow-tooltip align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.belongs_to_chart.chartdescription }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('example.cancreate')" show-overflow-tooltip align="center">
+      <el-table-column :label="$t('example.cancreate')" :resizable="false" show-overflow-tooltip align="center">
         <template slot-scope="scope">
           <span>
             <el-tag :type="scope.row.cancreate | statusFilter">
@@ -39,7 +44,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.date')" width="150px" align="center">
+      <el-table-column :label="$t('table.date')" :resizable="false" width="150px" align="center">
         <template slot-scope="scope">
           <span>
             {{ scope.row.lastcompleted | parseTime('{y}-{m}-{d}') }}
@@ -49,7 +54,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" width="230%" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('table.actions')" :resizable="false" align="center" width="230%" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <!-- <el-button type="success" size="mini" @click="handleShow(scope.row)">
             {{ $t('table.content') }}
@@ -74,7 +79,7 @@
         <el-form-item :label="$t('example.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item :label="$t('example.chart')" prop="chart">
+        <!-- <el-form-item :label="$t('example.chart')" prop="chart">
           <el-select 
             v-model="temp.chart" 
             class="filter-item" 
@@ -83,7 +88,7 @@
             placeholder="输入区域搜索">
             <el-option v-for="chart in chartMasterList" :key="chart.id" :label="chart.chartdescription" :value="chart.id"/>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item :label="$t('example.paymenttype')">
           <el-radio-group @change="" v-model="temp.paymenttype">
             <el-radio-button label="1">次月截止</el-radio-button>
@@ -211,8 +216,8 @@ export default {
       var _this = this
       _this.listLoading = true
       getExampleList(this.listQuery).then(response => {
-        _this.list = response.data.data
-        _this.total = response.data.total
+        _this.list = response.Data.DataList
+        _this.total = response.Data.total
         // Just to simulate the time of the request
         setTimeout(() => {
           _this.listLoading = false

@@ -51,6 +51,14 @@ const actions = {
         console.log('logres',response)
         const data = response.Data
         commit('SET_TOKEN', data.token)
+
+        commit('SET_ROLES', data.roles)
+        commit('SET_NAME', data.name)
+        commit('SET_USERID', data.id)
+        commit('SET_SHOPID', data.shopId)
+        commit('SET_AVATAR', data.avatar)
+        commit('SET_INTRODUCTION', data.introduction)
+        
         setToken(data.token)
         resolve()
       }).catch(error => {
