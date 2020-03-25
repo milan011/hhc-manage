@@ -44,7 +44,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log('request.js',res)
+    // console.log('request.js',res)
     if (res.ResultType !== 0) {
       Message({
         message: res.message || '接口请求失败',

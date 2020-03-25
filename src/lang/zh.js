@@ -96,6 +96,7 @@ export default {
     type: '类型',
     remark: '点评',
     search: '搜索',
+    searchReset: '清除筛选',
     add: '添加',
     export: '导出',
     id: '序号',

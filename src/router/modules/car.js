@@ -14,13 +14,13 @@ const carRouter = {
   children: [
     {
       path: 'allCar',
-      component: () => import('@/views/car/list'),
+      component: () => import('@/views/car/listAll'),
       name: 'AllCar',
       meta: { title: 'allCar' }
     },
     {
       path: 'myCar',
-      component: () => import('@/views/car/list'),
+      component: () => import('@/views/car/listSelf'),
       name: 'MyCar',
       meta: { title: 'myCar' }
     }

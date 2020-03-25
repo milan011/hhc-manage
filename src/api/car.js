@@ -23,12 +23,11 @@ export function getCarList(data) {
   })
 }
 
-export function carAll() {
+export function getCarInfo(carId) {
   return request({
     // url: '/car/list',
-    url: ROAST_CONFIG.API_URL + '/carList',
+    url: ROAST_CONFIG.API_URL + '/car/detail?id=' + carId,
     method: 'get',
-    params: {token, withOutPage:true}
   })
 }
 

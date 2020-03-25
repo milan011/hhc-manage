@@ -72,7 +72,7 @@
       </el-table-column>
     </el-table>
     <div class="pagination-container">
-      <el-pagination v-show="total>0" :current-page="listQuery.page" :total="total" background layout="total, prev, pager, next" @current-change="handleCurrentChange" />
+      <el-pagination v-show="total>0" :current-page="listQuery.PageIndex" :total="total" background layout="total, prev, pager, next" @current-change="handleCurrentChange" />
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px;margin:0px auto;">
@@ -168,7 +168,7 @@ export default {
       total: null,
       listLoading: true,
       listQuery: {
-        page: 1,
+        PageIndex: 1,
         condetionName: '',
         condetion: '',
       },
@@ -232,7 +232,7 @@ export default {
     },*/
     handleFilter() {
       var _this = this
-      _this.listQuery.page = 1
+      _this.listQuery.PageIndex = 1
       _this.getList()
     },
     handleSizeChange(val) {
@@ -242,7 +242,7 @@ export default {
     },
     handleCurrentChange(val) {
       var _this = this
-      _this.listQuery.page = val
+      _this.listQuery.PageIndex = val
       _this.getList()
     },
     handleModifyStatus(row, status) {

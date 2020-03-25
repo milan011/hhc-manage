@@ -25,10 +25,7 @@
       <el-select clearable style="width:100px;" v-model="listQuery.Transmission" class="filter-item" filterable placeholder="变速箱">
         <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <!-- <el-tooltip class="item" effect="dark" content="注意:默认只导出当月信息,如需导出其他月,请选择筛选条件" placement="top">
-        <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('table.export') }}</el-button>
-      </el-tooltip> -->
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="showSelect">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
@@ -71,15 +68,6 @@
           </el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column :label="$t('car.cancreate')" show-overflow-tooltip align="center">
-        <template slot-scope="scope">
-          <span>
-            <el-tag :type="scope.row.cancreate | statusFilter">
-              {{ cancreateStatus[scope.row.cancreate] }}
-            </el-tag>
-          </span>
-        </template>
-      </el-table-column> -->
       <el-table-column :label="$t('car.CreateDate')" :resizable="false" width="150px" align="center">
         <template slot-scope="scope">
           <span>
@@ -106,9 +94,6 @@
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">
             {{ $t('table.edit') }}
           </el-button>
-          <!-- <el-button type="success" size="mini" @click="handleSetChild(scope.row)">
-            {{ $t('table.setOrther') }}
-          </el-button> -->
           <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">
             {{ $t('table.delete') }}
           </el-button>
@@ -118,53 +103,47 @@
     <div class="pagination-container">
       <el-pagination v-show="total>0" :current-page="listQuery.page" :total="total" background layout="total, prev, pager, next" @current-change="handleCurrentChange" />
     </div>
-    <!-- <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px;margin:0px auto;">
-        <el-form-item :label="$t('car.name')" prop="name">
-          <el-input v-model="temp.name" />
-        </el-form-item>
-        <el-form-item :label="$t('car.chart')" prop="chart">
-          <el-select 
-            v-model="temp.chart" 
-            class="filter-item" 
-            filterable 
-            clearable 
-            placeholder="输入区域搜索">
-            <el-option v-for="chart in chartMasterList" :key="chart.id" :label="chart.chartdescription" :value="chart.id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('car.paymenttype')">
-          <el-radio-group @change="" v-model="temp.paymenttype">
-            <el-radio-button label="1">次月截止</el-radio-button>
-            <el-radio-button label="2">N天后截止</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item :label="$t('temp.cancreate')">
-          <el-switch
-            v-model="temp.cancreate"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-value="1"
-            inactive-value="0">
-          </el-switch>
-        </el-form-item>
-        <el-form-item :label="$t('temp.discountrate')" prop="discountrate">
-          <el-input-number 
-            v-model='temp.discountrate'   
-            :min="0" 
-            :max="1" 
-            :precision="2"
-            :step="0.1"
-            label="折扣率">
-          </el-input-number>
-        </el-form-item>  
+    <el-dialog title="搜索车源" :visible.sync="dialogSelectVisible">     
+      <el-row>
+        <!-- <el-col :span="8" style="text-align: left;">
+          <el-input placeholder="请输入内容" v-model="input1">
+            <template slot="prepend">Http://</template>
+            <el-select clearable style="width:70%;" v-model="listQuery.IsPutOn" class="filter-item" filterable placeholder="上架状态">
+              <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
+            </el-select>
+          </el-input>
+        </el-col> -->
+        <el-col :span="8" style="text-align: center;">
+          <div class="grid-content bg-purple">
+            <!-- <div style="display:inline-block">
+              <span>上架状态:</span>
+            </div> -->
+            <el-select clearable style="width:80%;"  v-model="listQuery.IsPutOn" class="filter-item" filterable placeholder="上架状态">
+              <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
+            </el-select>
+          </div>
+        </el-col>
+        <el-col :span="8" style="text-align: center;">
+          <div class="grid-content bg-purple">
+            <el-select clearable style="width:80%;" v-model="listQuery.IsPutOn" class="filter-item" filterable placeholder="车辆状态">
+              <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
+            </el-select>
+          </div>
+        </el-col>
+        <el-col :span="8" style="text-align: center;">
+          <div class="grid-content bg-purple">
+            <el-select clearable style="width:80%;" v-model="listQuery.IsPutOn" class="filter-item" filterable placeholder="车辆类型">
+              <el-option v-if="index != 0" v-for="(trans, index) in transmissionOptions" :key="index" :label="trans" :value="index"/>
+            </el-select>
+          </div>
+        </el-col>
+      </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{ $t('table.confirm') }}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{ $t('table.confirm') }}</el-button>
-      </div>
-    </el-dialog> -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleFilter">搜 索</el-button>
+      </span>
+    </el-dialog>
     <!-- 组件 -->
     <!-- <car-components ref="carChild"></car-components>  -->
   </div>
@@ -250,7 +229,7 @@ export default {
         discountrate : 0,
         paymenttype: '1',
       },
-      dialogFormVisible: false,
+      dialogSelectVisible: false,
       setRateVisible: false,
       carName: '',
       dialogStatus: '',
@@ -298,6 +277,10 @@ export default {
         _this.chartMasterList = response.data
       })
     },*/
+    showSelect(){
+      var _this = this
+      _this.dialogSelectVisible = true
+    },
     handleFilter() {
       var _this = this
       _this.listQuery.page = 1

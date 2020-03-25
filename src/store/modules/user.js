@@ -22,10 +22,10 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_USERID: (state, shopId) => {
+  SET_SHOPID: (state, shopId) => {
     state.shopId = shopId
   },
-  SET_SHOPID: (state, userId) => {
+  SET_USERID: (state, userId) => {
     state.userId = userId
   },
   SET_AVATAR: (state, avatar) => {
